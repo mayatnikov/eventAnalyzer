@@ -18,11 +18,12 @@ import java.net.URL;
  * User: vitaly
  * Date: 10.11.12
  * Time: 23:38
+ * Initialize esper engine and load esper rules (epl-file)
   */
 public class EsperBean implements EsperBeanInterface {
     private String esperConfigFile;
-    private String esperRulesFile;
-    private String esperRulesURI;
+    private String esperRulesFile;     // file with epl rules
+    private String esperRulesURI;      // symbolic  name
     private String esperEngineName;
 
     private EPServiceProvider engine;
@@ -35,6 +36,7 @@ public class EsperBean implements EsperBeanInterface {
         DeploymentResult result;
         Configuration config = new Configuration();
         URL url = EsperBean.class.getClassLoader().getResource(esperConfigFile);
+// if file not found set default configuration
         if (url == null) {
             LOG.error("Error loading configuration file '" + esperConfigFile + "' from classpath, use default settings");
             config.getEngineDefaults().getExecution().setPrioritized(true);
@@ -47,12 +49,13 @@ public class EsperBean implements EsperBeanInterface {
 //        engine = EPServiceProviderManager.getProvider(esperEngineName,config);
         engine =   EPServiceProviderManager.getDefaultProvider(config);
         engine.initialize(); // clear all rules
+
         InputStream rulesStream = this.getClass().getClassLoader().getResourceAsStream(esperRulesFile);
 
         if (rulesStream == null) {
             throw new RuntimeException("Failed to find file ["+esperConfigFile+"] in classpath");
         }
-        try {
+        try {  // deploy epl-rules into engine
             result = engine.getEPAdministrator().getDeploymentAdmin().readDeploy(rulesStream, null, null, null);
         }
         catch (Exception e) {
@@ -63,8 +66,8 @@ public class EsperBean implements EsperBeanInterface {
         if(LOG.isDebugEnabled()) dumpStatements();
     }
 
+// Dump statement list with status
     public void dumpStatements() {
-
         LOG.debug("======= Dump of statements / status ==========");
         String[] ss = EPServiceProviderManager.getProviderURIs();
         for(int i=0, ssl = ss.length; i< ssl; i++) {

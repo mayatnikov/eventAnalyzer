@@ -1,10 +1,5 @@
 package home.vitaly.transaction.analyzer;
 
-import org.apache.camel.builder.RouteBuilder;
-
-import home.vitaly.camel.processors.DummyProcessor;
-import home.vitaly.camel.processors.EsperEventProcessor;
-import home.vitaly.camel.processors.StringEventProcessor;
 import org.apache.log4j.Logger;
 
 public class RunAnalyzer {

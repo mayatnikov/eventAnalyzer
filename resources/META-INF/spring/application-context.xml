@@ -15,7 +15,7 @@ xsi:schemaLocation="
         <property name="esperEngineName" value="esper-engine-1" />
     </bean>
 
-<!--Для работы в Osgi container
+<!--Для работы в Osgi container разблокировать блок
 
     <osgi:service ref="esperBean">
         <osgi:interfaces>
@@ -34,7 +34,7 @@ xsi:schemaLocation="
     </bean>
 
     <bean id="esperProc" class="home.vitaly.camel.processors.EsperEventProcessor">
-        <property name="enablePrint" value="false" />
+        <property name="enablePrint" value="true" />
     </bean>
 
     <bean id="aq" class="org.apache.camel.component.jms.JmsComponent">
@@ -79,20 +79,18 @@ xsi:schemaLocation="
         <camel:route id="ActiveCard">
             <camel:from uri="esper:OutActiveCard?eql=@Name('OutActiveCard') select * from ActiveCard" />
             <camel:bean ref="esperProc" method="process"/>
-            <camel:bean ref="strProc" method="process"/>
-            <!--<camel:to uri="log:actvecard?level=INFO"/>-->
             <camel:to uri="aq:ActiveCard"/>
         </camel:route>
 
         <camel:route id="IncreaseAmount">
             <camel:from uri="esper:OutIncreaseAmount?eql=@Name('OutIncreaseAmount') select * from IncreaseAmount" />
             <camel:bean ref="esperProc" method="process"/>
-            <camel:bean ref="strProc" method="process"/>
         </camel:route>
 
         <camel:route id="DumpActiveCard">
             <camel:from uri="aq:ActiveCard" />
-            <camel:to uri="log:actvecard?level=INFO"/>
+            <!--<camel:to uri="log:actvecard?level=INFO"/>-->
+            <camel:bean ref="dummyProc"/>
         </camel:route>
 
     </camel:camelContext>

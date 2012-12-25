@@ -1,14 +1,21 @@
 package home.vitaly.camel.processors;
 
-import java.util.Map;
-// import java.util.Set;
-
 import org.apache.camel.Exchange;
 import org.apache.camel.Processor;
+
+import java.util.Map;
+
+// import java.util.Set;
 
 public class EsperEventProcessor implements Processor {
   private boolean enablePrint =true;
 
+    /**
+     * Convert Esper event <Body> to string
+     *  print to stdout if enablePrint is true
+     * @param exchange Camel exchange object
+     * @throws Exception
+     */
   public void process(Exchange exchange) throws Exception {
 	        String rooleName = exchange.getIn().getHeader("CamelEsperName", String.class);
 

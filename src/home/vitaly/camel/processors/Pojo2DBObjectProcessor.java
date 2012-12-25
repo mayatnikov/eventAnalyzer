@@ -13,12 +13,8 @@ import java.lang.reflect.Method;
 
 
 /**
- * Created with IntelliJ IDEA.
- * User: vitaly
- * Date: 22.12.12
- * Time: 10:46
  * converter from POJO to MongoDB writable object
- * used in Camel router
+ * used by Camel router
  */
 public class Pojo2DBObjectProcessor implements Processor {
     static Logger LOG = Logger.getLogger(Pojo2DBObjectProcessor.class.getName());

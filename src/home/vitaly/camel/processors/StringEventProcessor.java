@@ -3,6 +3,9 @@ package home.vitaly.camel.processors;
 import org.apache.camel.Exchange;
 import org.apache.camel.Processor;
 
+/**
+ * Camel router, only print message
+ */
 public class StringEventProcessor implements Processor {
 
 	private boolean enablePrint =true;
