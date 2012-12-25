@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:camel="http://camel.apache.org/schema/spring"
+       xmlns:osgi="http://www.springframework.org/schema/osgi"
+xsi:schemaLocation="
+       http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
+       http://camel.apache.org/schema/spring http://camel.apache.org/schema/spring/camel-spring.xsd
+       http://www.springframework.org/schema/osgi http://www.springframework.org/schema/osgi/spring-osgi.xsd
+">
+    <bean id="esperBean"  class="home.vitaly.transaction.analyzer.EsperBean" init-method="init">
+        <property name="esperConfigFile" value="esper.cfg.xml" />
+        <property name="esperRulesFile" value="esper.rules.epl" />
+        <property name="esperRulesURI" value="rules-module-1" />
+        <property name="esperEngineName" value="esper-engine-1" />
+    </bean>
+
+<!--Для работы в Osgi container
+
+    <osgi:service ref="esperBean">
+        <osgi:interfaces>
+            <value>home.vitaly.transaction.analyzer.EsperBeanInterface</value>
+        </osgi:interfaces>
+    </osgi:service>
+
+-->
+
+    <bean id="Transaction" class="home.vitaly.datamodel.TransactionImpl"/>
+
+    <bean id="dummyProc" class="home.vitaly.camel.processors.DummyProcessor"/>
+
+    <bean id="strProc" class="home.vitaly.camel.processors.StringEventProcessor">
+        <property name="enablePrint" value="true" />
+    </bean>
+
+    <bean id="esperProc" class="home.vitaly.camel.processors.EsperEventProcessor">
+        <property name="enablePrint" value="false" />
+    </bean>
+
+    <bean id="aq" class="org.apache.camel.component.jms.JmsComponent">
+        <property name="connectionFactory">
+            <bean class="org.apache.activemq.ActiveMQConnectionFactory">
+                <property name="brokerURL" value="tcp://localhost:61616"/>
+            </bean>
+        </property>
+    </bean>
+
+    <bean id="mdb" class="com.mongodb.Mongo">
+        <constructor-arg index="0">
+            <bean class="com.mongodb.MongoURI">
+                <constructor-arg index="0" value="mongodb://localhost:27017" />
+            </bean>
+        </constructor-arg>
+    </bean>
+
+    <bean id="pojo2mongo" class="home.vitaly.camel.processors.Pojo2DBObjectProcessor"/>
+
+
+    <camel:camelContext>
+        <!--    сканирование package на наличие правил на JAVA-DSL
+        <camel:package>home.vitaly.camel.routesr</camel:package>  -->
+
+        <!-- ввод сообщений в esper  -->
+        <camel:route id="getQueue">
+            <camel:from uri="aq:TrQueue"/>
+            <camel:to uri="esper:all"/>
+            <camel:to uri="direct:history"/>
+        </camel:route>
+
+<!--Регистрация сообытий в истории-->
+        <camel:route id="historyReg">
+            <camel:from uri="direct:history"/>
+            <camel:bean ref="pojo2mongo" />
+            <camel:to uri="mongodb:mdb?database=DBTR&amp;collection=TR&amp;operation=insert" />
+        </camel:route>
+
+
+        <!-- вывод сообщений из event-window по каждому из правил в свою очередь -->
+        <camel:route id="ActiveCard">
+            <camel:from uri="esper:OutActiveCard?eql=@Name('OutActiveCard') select * from ActiveCard" />
+            <camel:bean ref="esperProc" method="process"/>
+            <camel:bean ref="strProc" method="process"/>
+            <!--<camel:to uri="log:actvecard?level=INFO"/>-->
+            <camel:to uri="aq:ActiveCard"/>
+        </camel:route>
+
+        <camel:route id="IncreaseAmount">
+            <camel:from uri="esper:OutIncreaseAmount?eql=@Name('OutIncreaseAmount') select * from IncreaseAmount" />
+            <camel:bean ref="esperProc" method="process"/>
+            <camel:bean ref="strProc" method="process"/>
+        </camel:route>
+
+        <camel:route id="DumpActiveCard">
+            <camel:from uri="aq:ActiveCard" />
+            <camel:to uri="log:actvecard?level=INFO"/>
+        </camel:route>
+
+    </camel:camelContext>
+</beans>

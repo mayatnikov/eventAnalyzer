@@ -1,0 +1,19 @@
+<blueprint xmlns="http://www.osgi.org/xmlns/blueprint/v1.0.0"
+           xmlns:osgi="http://www.springframework.org/schema/osgi">
+
+    <command-bundle xmlns="http://karaf.apache.org/xmlns/shell/v1.0.0">
+        <command name="esper/stmt">
+            <action class="home.vitaly.karaf.commands.StmtManager">
+                <property name="eb" ref="esperBean"/>
+            </action>
+            <completers>
+                <ref component-id="esperCompleter"/>
+                <null/>
+            </completers>
+        </command>
+    </command-bundle>
+
+    <reference id="esperBean" interface="home.vitaly.transaction.analyzer.EsperBeanInterface" />
+    <bean id="esperCompleter" class="home.vitaly.karaf.commands.EsperCompleter"/>
+
+</blueprint>

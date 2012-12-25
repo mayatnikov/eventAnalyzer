@@ -1,0 +1,34 @@
+module home.vitaly.resources.rules;
+//
+//  rules select fraud transactions
+//
+
+@Name('ActiveCard')
+@Description('Активность карты выше порога по кол-ву операций и ср сумме операции в окне X минут')
+insert into ActiveCard
+  select
+    distinct cardnum as PAN,
+    avg(tsum) as AVGM,
+    count(1) as CNT,
+    last(ttime)  as TTIME
+    from home.vitaly.datamodel.Transaction(rc=-1).win:time(10 sec)
+      group by cardnum having count(1)>20 and avg(tsum) >80000
+//      output every 10 sec;
+;
+
+@Name('IncAmount')
+@Description('Рост суммы операции по карте во временном окне Х минут')
+// @Audit('stream,property,view')
+insert into IncreaseAmount
+ select
+  id as ID0,
+  prev(id,1) as ID1,
+  prev(id,2) as ID2,
+  cardnum as PAN,
+  tsum as AM0,
+  prev(tsum,1) as AM1,
+  prev(tsum,2) as AM2
+    from home.vitaly.datamodel.Transaction(rc=-1).std:groupwin(cardnum).win:time(2 sec)
+      where cardnum=prev(cardnum,1) and cardnum=prev(cardnum,2)
+        and tsum<prev(tsum,1) and prev(tsum,1)<prev(tsum,2)
+;

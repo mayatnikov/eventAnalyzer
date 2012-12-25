@@ -1,0 +1,9 @@
+Manifest-Version: 1.0
+Built-By: Vitaly Mayatnikov
+Build-Jdk: 1.6.0_17
+Bundle-Name: Fraud transaction analyzer
+Created-By: VitalySoft(c)
+Bundle-ManifestVersion: 2
+Bundle-SymbolicName: FTA
+Bundle-Version: 1.0.1
+Import-Package:  org.apache.activemq, org.apache.activemq.pool, org.apache.camel.component.jms, org.apache.activemq.camel.component 

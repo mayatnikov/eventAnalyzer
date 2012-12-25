@@ -1,0 +1,50 @@
+<ivy-module version="2.0">
+    <info organisation="VitalySoft" module="EsperManagment"/>
+    <dependencies>
+	<dependency name="datamodel" rev="latest.integration" />
+
+<!-- karaf shell dependency -->
+        <dependency org="org.apache.felix.gogo" name="org.apache.felix.gogo.runtime" rev="0.4.0"/>
+        <dependency org="org.apache.karaf.shell" name="org.apache.karaf.shell.console" rev="2.2.9"/>
+
+        <dependency org="org.apache.camel" name="camel-core" rev="2.10.1"/>
+        <dependency org="org.apache.camel" name="camel-spring" rev="2.10.1"/>
+        <dependency org="org.apache.camel" name="camel-jms" rev="2.10.1"/>
+
+<!-- MongoDB для регистрации истории -->
+        <dependency org="org.mongodb" name="mongo-java-driver" rev="2.9.1"/>
+        <dependency org="org.apache.camel" name="camel-mongodb" rev="2.10.1"/>
+
+        <dependency org="com.espertech" name="esper" rev="4.7.0"/>
+        <dependency org="com.espertech" name="esperio-springjms" rev="4.7.0"/>
+        <dependency org="log4j" name="log4j" rev="1.2.17"/>
+		<dependency org="commons-logging" name="commons-logging" rev="1.1.1"/>
+        <dependency org="commons-pool" name="commons-pool" rev="1.6"/>
+
+        <dependency org="org.antlr" name="antlr-runtime" rev="3.2"/>
+		<dependency org="cglib" name="cglib-nodep" rev="2.2"/>
+		<dependency org="junit" name="junit" rev="4.8.2"/>
+        <dependency org="org.apache.activemq" name="activemq-all" rev="5.6.0"/>
+        <dependency org="org.apache.activemq" name="activemq-pool" rev="5.6.0"/>
+
+        <dependency org="org.springframework" name="spring-core" rev="3.1.2.RELEASE"/>
+        <dependency org="org.springframework" name="spring-jms" rev="3.1.2.RELEASE"/>
+        <dependency org="org.springframework" name="spring-asm" rev="3.1.2.RELEASE"/>
+        <dependency org="org.springframework" name="spring-beans" rev="3.1.2.RELEASE"/>
+        <dependency org="org.springframework" name="spring-expression" rev="3.1.2.RELEASE"/>
+        <dependency org="org.springframework" name="spring-context" rev="3.1.2.RELEASE"/>
+        <dependency org="org.springframework" name="spring-context-support" rev="3.1.2.RELEASE"/>
+        <dependency org="org.springframework" name="spring-context" rev="3.1.2.RELEASE"/>
+        <dependency org="org.springframework" name="spring-beans" rev="3.1.2.RELEASE"/>
+        <dependency org="org.springframework" name="spring-aop" rev="3.1.2.RELEASE"/>
+        <dependency org="org.springframework" name="spring-expression" rev="3.1.2.RELEASE"/>
+        <dependency org="org.springframework" name="spring-tx" rev="3.1.2.RELEASE"/>
+
+        <!-- dependency for osgi container -->
+        <dependency org="org.apache.servicemix.bundles" name="org.apache.servicemix.bundles.aopalliance" rev="1.0_6"/>
+        <dependency org="org.glassfish.main.javaee-api" name="javax.jms" rev="3.1.2.2"/>
+        <dependency org="org.apache.activemq" name="activemq-core" rev="5.6.0"/>
+        <dependency org="javax.management.j2ee" name="management-api" rev="1.1-rev-1"/>
+
+    </dependencies>
+</ivy-module>
