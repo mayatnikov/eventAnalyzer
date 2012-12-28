@@ -71,7 +71,7 @@ xsi:schemaLocation="
         <camel:route id="historyReg">
             <camel:from uri="direct:history"/>
             <camel:bean ref="pojo2mongo" />
-            <camel:to uri="mongodb:mdb?database=DBTR&amp;collection=TR&amp;operation=insert" />
+<!--            <camel:to uri="mongodb:mdb?database=DBTR&amp;collection=TR&amp;operation=insert" />  -->
         </camel:route>
 
 
