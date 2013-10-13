@@ -13,7 +13,8 @@
 
 <!-- MongoDB для регистрации истории -->
         <dependency org="org.mongodb" name="mongo-java-driver" rev="2.9.1"/>
-        <dependency org="org.apache.camel" name="camel-mongodb" rev="2.10.1"/>
+        <dependency org="org.apache.camel" name="camel-mongodb" rev="2.10.3"/>
+        <dependency org="org.apache.servicemix.bundles" name="org.apache.servicemix.bundles.mongodb" rev="2.3_2"/>
 
         <dependency org="com.espertech" name="esper" rev="4.7.0"/>
         <dependency org="com.espertech" name="esperio-springjms" rev="4.7.0"/>

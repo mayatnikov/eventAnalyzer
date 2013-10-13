@@ -15,19 +15,21 @@ xsi:schemaLocation="
         <property name="esperEngineName" value="esper-engine-1" />
     </bean>
 
-<!--Для работы в Osgi container разблокировать блок
+<!--Для работы в Osgi container разблокировать
 
     <osgi:service ref="esperBean">
         <osgi:interfaces>
             <value>home.vitaly.transaction.analyzer.EsperBeanInterface</value>
         </osgi:interfaces>
     </osgi:service>
+    -->
 
--->
 
     <bean id="Transaction" class="home.vitaly.datamodel.TransactionImpl"/>
 
-    <bean id="dummyProc" class="home.vitaly.camel.processors.DummyProcessor"/>
+    <bean id="dummyProc" class="home.vitaly.camel.processors.DummyProcessor">
+        <!--<property name="enablePrint" value="true" />-->
+    </bean>
 
     <bean id="strProc" class="home.vitaly.camel.processors.StringEventProcessor">
         <property name="enablePrint" value="true" />
@@ -45,6 +47,7 @@ xsi:schemaLocation="
         </property>
     </bean>
 
+<!--  -->
     <bean id="mdb" class="com.mongodb.Mongo">
         <constructor-arg index="0">
             <bean class="com.mongodb.MongoURI">
@@ -67,11 +70,11 @@ xsi:schemaLocation="
             <camel:to uri="direct:history"/>
         </camel:route>
 
-<!--Регистрация сообытий в истории-->
+<!--Регистрация сообытий в истории  -->
         <camel:route id="historyReg">
             <camel:from uri="direct:history"/>
             <camel:bean ref="pojo2mongo" />
-<!--            <camel:to uri="mongodb:mdb?database=DBTR&amp;collection=TR&amp;operation=insert" />  -->
+            <camel:to uri="mongodb:mdb?database=DBTR&amp;collection=TR_out&amp;operation=insert" />
         </camel:route>
 
 

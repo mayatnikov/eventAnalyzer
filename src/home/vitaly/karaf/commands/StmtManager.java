@@ -27,10 +27,10 @@ public class StmtManager extends OsgiCommandSupport {
     }
 
 
-    @Argument(index = 0, name = "stmtName", description = "Statement name if null - display all statements", required = false, multiValued = false)
+    @Argument(index = 0, name = "stmtName", description = "Statement name | null(display all statements)", required = false, multiValued = false)
     String stmtName = null;
 
-    @Argument(index = 1, name = "action", description = "Action: [ info | stop | start | destroy | create]", required = false, multiValued = false)
+    @Argument(index = 1, name = "action", description = "Action: [info|stop|start|destroy|create]", required = false, multiValued = false)
     String action = null;
 
     @Argument(index = 2, name = "epl", description = "EPL or Pattern expretion", required = false, multiValued = false)

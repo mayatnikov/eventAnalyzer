@@ -84,9 +84,11 @@ org.antlr.runtime,
 net.sf.cglib.core,
 net.sf.cglib.reflect,
 org.osgi.service.blueprint,
-com.mongodb,
-java.beans
+com.mongodb
 "/>
+<!--  -->
+
+
             </manifest>
 		</jar>
     </target>

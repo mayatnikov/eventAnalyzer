@@ -1,2 +1,14 @@
 Esper event processor
 integration with camel and OSGI container
+
+
+ последовательность запуска:
+
+ /work/MongoDB/bin/mongod --dbpath /work/MongoDB/data
+
+ /work/Java/apache-activemq-5.3.0/bin/activemq
+
+ cd /Users/vitaly/workspace/fraudAnalitic/projects/home.vitaly.eventAnalyzer ; ./runAnalyzer.sh
+
+ cd /Users/vitaly/workspace/fraudAnalitic/projects/home.vitaly.simulator ; ./runSimulator.sh
+
