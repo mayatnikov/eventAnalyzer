@@ -2,15 +2,22 @@ Esper event processor
 integration with camel and OSGI container
 
 ============= что установить ===============
+Для работы в OSGI контейнере:
+apache-servicemix-4.5.0 - лучше FULL версию
+MongoDB_v2.4
 
+в косоли  karaf'а установить дополнительные компоненты:
 features:install camel-mongodb
 
-deploy доп классы для esper
-deploy esper engine (откорректированный под OSGi )
+Переписать в директрию ...../apache-servicemix-4.5.0_full/deploy
 
+antlr-runtime-3.2.jar
+cglib-nodep-2.2.jar
+datamodel.jar
+esper-4.7.0c.jar - esper откорректирован MANIFEST.MF для работы в OSGi контейнере
 
+если все запустилось без ошибок можно deploy EventAnalyzer'а
 
-activemq изменить порты 5161 5162 51616
 
 
 
