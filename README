@@ -1,10 +1,6 @@
 Esper event processor
 integration with camel and OSGI container
 
-Ну вот как то так:
-Прежде всего надо изучить EPL для написания фильтров (см esper_reference_manual.pdf )
-вот так можно работать через консольное расширение если engine запущен в OSGi контейнере
-
 ============= что установить ===============
 Для работы в OSGI контейнере:
 apache-servicemix-4.5.0 - лучше FULL версию
@@ -98,7 +94,6 @@ Info:[@Name('us3')
   insert into us3
     select address,merchname, sum(tsum) from  home.vitaly.datamodel.Transaction.win:time(50 sec) group by merchname]
 karaf@root>
-esper:stmt us3 create 'insert into us3 select address,merchname, sum(tsum) from  home.vitaly.datamodel.Transaction.win:time(10 sec) group by merchname'  - - создать правило (если существует предварительно надо destroy )
 
 Это список команд
 формат esper:stmt stmt_name [action] ['statement expression']
@@ -110,120 +105,12 @@ esper:stmt us3 create 'insert into us3 select address,merchname, sum(tsum) from 
         else if (action!=null && action.equalsIgnoreCase("destroy")) destroyStatement(); стоп и удаление
         else if (action!=null && action.equalsIgnoreCase("create")) createStatement();   создание и старт
 
+esper:stmt us3 create 'insert into us3 select address,merchname, sum(tsum) from  home.vitaly.datamodel.Transaction.win:time(99 sec) group by merchname' - создать правило (если существует предварительно надо destroy )
+
 ================== внешние подключения для просмотра работы =================
 http://localhost:8181/activemqweb/index.jsp - Active MQ
 http://localhost:8181/system/console        (smx/smx)
 ssh -p 8101 smx@localhost         -  cli console
 
 JConsole:          service:jmx:rmi:///jndi/rmi://localhost:1099/karaf-root   (smx/smx)
-
-
-================= основные команды консоли karaf (servicemx) ================
-list - список бинов
-stop NNN - стоп бина NNN
-start NNN
-uninstall NNN
-osgi:ls NNN - информация по бину
-osgi:header NNN - просмотр MANIFEST.MF
-
-log:tail | grep [expression]   - просмотр журнала с фильтром
-log:level DEBUG - включить отладочный ежим logging
-
-___
-Vitaly Mayatnikov / Виталий Маятников
-email:mayatnikov@gmail.com
-mob: +7(916) 589-43-32
-skype: mayatnikov
-
-On 29.10.2013, at 0:18, Павел Шабалин wrote:
-
-Ты конечно озадачил. Тогда нужно набор файлов сделать, пусть каждый скопирует из своего файла в общий свою часть. Так можно?
-
-
-
-27 октября 2013 г., 11:11 пользователь Vitaly Mayatnikov <mayatnikov@gmail.com> написал:
-Паша я оживил esper-console, в ней можно просматривать удалять добавлять запускать новые правила
-Но самый большой недостаток, контроля никакого, если ошибка в синтаксисе, понять почему не работает сложно.
-Мне кажется для учебы вариант вовсе не подходящий.
-Ну и тебе с настройками возиться придется.
-
-___
-Vitaly Mayatnikov / Виталий Маятников
-email:mayatnikov@gmail.com
-mob: +7(916) 589-43-32
-skype: mayatnikov
-
-On 24.10.2013, at 23:48, Павел Шабалин wrote:
-
-можно добавлять свои правила в non-stop без перезагрузки  - я как раз об этом и говорю. Это учебная система, понятно, что она отличается от настоящей. 
-
-
-
-24 октября 2013 г., 22:25 пользователь Vitaly Mayatnikov <mayatnikov@gmail.com> написал:
-Привет
-Один файл править - это ерунда будет
-Вот если запуститься в OSGI контейнере то будет esper-console и в ней можно добавлять свои правила в non-stop без перезагрузки
-Но мне это надо самому проиграть, давно делал, подзабыл, что там было.
-Надо?
-Ну и вообще то все было как раз направлено много потоков свести в кучу на единую систему правил, но не наоборот
-
-___
-Vitaly Mayatnikov / Виталий Маятников
-email:mayatnikov@gmail.com
-mob: +7(916) 589-43-32
-skype: mayatnikov
-
-On 24.10.2013, at 23:06, Павел Шабалин wrote:
-
-Нет, я пока не готов по материалу - времени не хватило все свести в один документ... Подскажи, если 5 чел будет сидеть, могут они один файл правил редактировать? Как то нужно занять их всех)) 
-
-
-
-22 октября 2013 г., 12:50 пользователь Vitaly Mayatnikov <mayatnikov@gmail.com> написал:
-ну как, начались лекции?
-
-___
-Vitaly Mayatnikov / Виталий Маятников
-email:mayatnikov@gmail.com
-mob: +7(916) 589-43-32
-skype: mayatnikov
-
-On 17.10.2013, at 9:43, Павел Шабалин wrote:
-
-так я экспортом-импортом и занимался, Это системно грамотней было бы, ну да ладно))
-
-
-17 октября 2013 г., 8:20 пользователь Vitaly Mayatnikov <mayatnikov@gmail.com> написал:
-Паша, наплюй ты на эту совместимость
-- вытяни директорию /usr/local/eventAnalyzer
-- замени бинарник MongoDB под платформу
-- установи JDK
-ВОТ И ВСЯ РАБОТА.
-и не надо шаманить с виртуальными машинами, время тратить.
-
-___
-Vitaly Mayatnikov / Виталий Маятников
-email:mayatnikov@gmail.com
-mob: +7(916) 589-43-32
-skype: mayatnikov
-
-On 16.10.2013, at 21:22, Павел Шабалин wrote:
-
-привет, отчитаюсь.))
-
-Несмотря на все заверения о переносимости, с форматами VDI и VDMK есть проблемы. 
- ESXi при запуске конвертированнго VDI зависает напрочь, видимо, это связано с тем, что неправильно установлен дисковый контроллер. он ставится IDE  почему-то автоматом, а должен быть SCSI. Т.е. под ESXi не пошло напрямую. Под Linux Oracle  который сам VM на ESXi поставил Virtualbox. Но тоже не пошёл твой VdI - требует VT-x, а  виртуальная машина этого не позволяет. Т.е. хостовая машина должна быть реальной. Работает только на реальной машине.
-
-
-12 октября 2013 г., 11:09 пользователь Павел Шабалин <pg.shabalin@gmail.com> написал:
-Виталий,  ты уж с virtualbox   поработай, как мы говорили. Мегафон опять звонил, нужно будет мне им показать систему. И интересное дело, эта вещь применяется в системах ИТ на рынке ценных бумаг. там она более востребована, чем в карточках.
-
-
-
-
-
-
-
-
-
 

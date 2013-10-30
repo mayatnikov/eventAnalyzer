@@ -5,7 +5,7 @@
  	<property name="classes.dir" value="${build.dir}/classes" />
  	<property name="resources.dir" value="${basedir}/resources" />
     <property name="src.dir" value="src" />
-    <property name="deploy.dir" value="/usr/local/work/Java/apache-servicemix-4.4.2/deploy" />
+    <property name="deploy.dir" value="/H/Java/apache-servicemix-4.5.3_full/deploy" />
 
    <!-- ivy properties used -->
     <property name="ivy.settings.dir" value="../settings" />
@@ -85,8 +85,11 @@ net.sf.cglib.core,
 net.sf.cglib.reflect,
 org.osgi.service.blueprint,
 com.mongodb,
-java.beans
+org.apache.camel.component.mongodb
 "/>
+<!--  -->
+
+
             </manifest>
 		</jar>
     </target>
