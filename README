@@ -6,50 +6,111 @@ integration with camel and OSGI container
 apache-servicemix-4.5.0 - лучше FULL версию
 MongoDB_v2.4
 
-в косоли  karaf'а установить дополнительные компоненты:
+в консоли  karaf'а установить дополнительные компоненты:
 features:install camel-mongodb
 
 Переписать в директрию ...../apache-servicemix-4.5.0_full/deploy
 
 antlr-runtime-3.2.jar
 cglib-nodep-2.2.jar
-datamodel.jar
+datamodel.jar - class обрабатываемого события
+
 esper-4.7.0c.jar - esper откорректирован MANIFEST.MF для работы в OSGi контейнере
 
 если все запустилось без ошибок можно deploy EventAnalyzer'а
+EventAnalyzer.jar --->  deploy
 
+================ пуск симулятора =============
+транзакции лежат в MongoDB
+ cd ...................home.vitaly.sim2 ; ./runSimulator.sh S
 
+в логе sevicemix и в консоли karaf  можно видеть срабатывание правил
+если в настройках вывести срабатывание в очередь  MQ можно увидеть рост очереди отобранных событий
 
+=============== как менять правила ===================
+заходим в консоль karaf
+karaf@root> esper:stmt      - посмотреть список правил (statement)
+List of statements:
+STMT NAME:"us3--0" STATE:[STARTED]
+STMT NAME:"ActiveCard" STATE:[STARTED]
+STMT NAME:"us8--0" STATE:[STARTED]
+STMT NAME:"us5--0" STATE:[STARTED]
+STMT NAME:"49e5cbfa-ad3a-44fd-abbc-1aeb813abcd6" STATE:[STARTED]
+STMT NAME:"us2--0" STATE:[STARTED]
+STMT NAME:"us1" STATE:[STARTED]
+STMT NAME:"us4" STATE:[STARTED]
+STMT NAME:"us5" STATE:[STARTED]
+STMT NAME:"us2" STATE:[STARTED]
+STMT NAME:"us3" STATE:[STARTED]
+STMT NAME:"us8" STATE:[STARTED]
+STMT NAME:"us9" STATE:[STARTED]
+STMT NAME:"us6" STATE:[STARTED]
+STMT NAME:"us7" STATE:[STARTED]
+STMT NAME:"OutActiveCard" STATE:[STARTED]
+STMT NAME:"us1--0" STATE:[STARTED]
+STMT NAME:"us10--0" STATE:[STARTED]
+STMT NAME:"us6--0" STATE:[STARTED]
+STMT NAME:"OutIncreaseAmount" STATE:[STARTED]
+STMT NAME:"us9--0" STATE:[STARTED]
+STMT NAME:"us7--0" STATE:[STARTED]
+STMT NAME:"us4--0" STATE:[STARTED]
+STMT NAME:"us10" STATE:[STARTED]
+STMT NAME:"IncAmount" STATE:[STARTED]
+karaf@root>
+karaf@root> esper:stmt
+List of statements:
+STMT NAME:"us3--0" STATE:[STARTED]
+STMT NAME:"ActiveCard" STATE:[STARTED]
+STMT NAME:"us8--0" STATE:[STARTED]
+STMT NAME:"us5--0" STATE:[STARTED]
+STMT NAME:"49e5cbfa-ad3a-44fd-abbc-1aeb813abcd6" STATE:[STARTED]
+STMT NAME:"us2--0" STATE:[STARTED]
+STMT NAME:"us1" STATE:[STARTED]
+STMT NAME:"us4" STATE:[STARTED]
+STMT NAME:"us5" STATE:[STARTED]
+STMT NAME:"us2" STATE:[STARTED]
+STMT NAME:"us3" STATE:[STARTED]
+STMT NAME:"us8" STATE:[STARTED]
+STMT NAME:"us9" STATE:[STARTED]
+STMT NAME:"us6" STATE:[STARTED]
+STMT NAME:"us7" STATE:[STARTED]
+STMT NAME:"OutActiveCard" STATE:[STARTED]
+STMT NAME:"us1--0" STATE:[STARTED]
+STMT NAME:"us10--0" STATE:[STARTED]
+STMT NAME:"us6--0" STATE:[STARTED]
+STMT NAME:"OutIncreaseAmount" STATE:[STARTED]
+STMT NAME:"us9--0" STATE:[STARTED]
+STMT NAME:"us7--0" STATE:[STARTED]
+STMT NAME:"us4--0" STATE:[STARTED]
+STMT NAME:"us10" STATE:[STARTED]
+STMT NAME:"IncAmount" STATE:[STARTED]
 
+karaf@root> esper:stmt us3 - посмотреть содержимое правила
+Name:"us3"
+Type:[EPL]
+Status:[STARTED]
+Info:[@Name('us3')
+  @Description('Правило для пользователя 3')
+  insert into us3
+    select address,merchname, sum(tsum) from  home.vitaly.datamodel.Transaction.win:time(50 sec) group by merchname]
+karaf@root>
 
+Это список команд
+формат esper:stmt stmt_name [action] ['statement expression']
 
- последовательность запуска:
+        if(stmtName == null || stmtName.equalsIgnoreCase("all")) printStmtList();  -  список
+        else if (action==null || action.equalsIgnoreCase("info")) printStmtInfo(); - содержимое
+        else if (action!=null && action.equalsIgnoreCase("stop")) stopStatement(); - останов
+        else if (action!=null && action.equalsIgnoreCase("start")) startStatement();  - старт
+        else if (action!=null && action.equalsIgnoreCase("destroy")) destroyStatement(); стоп и удаление
+        else if (action!=null && action.equalsIgnoreCase("create")) createStatement();   создание и старт
 
- /H/work/MongoDB_v2.4/bin/mongod --dbpath /H/work/MongoDB_v2.4/data
+esper:stmt us3 create 'insert into us3 select address,merchname, sum(tsum) from  home.vitaly.datamodel.Transaction.win:time(99 sec) group by merchname' - создать правило (если существует предварительно надо destroy )
 
- export ACTIVEMQ_HOME=/H/Java/apache-activemq-5.7.0; /H/Java/apache-activemq-5.7.0/bin/activemq start
-
-#
-#  Пуск в командной строке
-#
- cd /Users/vitaly/workspace/fraudAnalitic/projects/home.vitaly.eventAnalyzer ; ./runAnalyzer.sh
-
-#
-#  Пуск в OSGi контейнере
-#
-/H/Java/apache-servicemix-4.5.0_full/bin/servicemix
-
-
- cd /Users/vitaly/workspace/fraudAnalitic/projects/home.vitaly.sim2 ; ./runSimulator.sh
-
------------
-service mix web admin:
-
+================== внешние подключения для просмотра работы =================
 http://localhost:8181/activemqweb/index.jsp - Active MQ
 http://localhost:8181/system/console        (smx/smx)
 ssh -p 8101 smx@localhost         -  cli console
 
-service:jmx:rmi:///jndi/rmi://localhost:1099/karaf-root   (smx/smx)
-
-
+JConsole:          service:jmx:rmi:///jndi/rmi://localhost:1099/karaf-root   (smx/smx)
 
