@@ -3,6 +3,8 @@ module home.vitaly.resources.rules;
 //  rules select fraud transactions
 //
 
+create schema dual as (MyVal String);
+
 @Name('ActiveCard')
 @Description('Активность карты выше порога по кол-ву операций и ср сумме операции в окне X минут')
 insert into ActiveCard
@@ -13,8 +15,8 @@ insert into ActiveCard
     last(ttime)  as TTIME
     from home.vitaly.datamodel.Transaction(rc=-1).win:time(10 sec)
       group by cardnum having count(1)>20 and avg(tsum) >80000
-//      output every 10 sec;
-;
+      output every 10 sec;
+
 
 @Name('IncAmount')
 @Description('Рост суммы операции по карте во временном окне Х минут')
@@ -30,5 +32,59 @@ insert into IncreaseAmount
   prev(tsum,2) as AM2
     from home.vitaly.datamodel.Transaction(rc=-1).std:groupwin(cardnum).win:time(2 sec)
       where cardnum=prev(cardnum,1) and cardnum=prev(cardnum,2)
-        and tsum<prev(tsum,1) and prev(tsum,1)<prev(tsum,2)
-;
+        and tsum<prev(tsum,1) and prev(tsum,1)<prev(tsum,2);
+
+  @Name('us1')
+  @Description('Правило для пользователя 1')
+  insert into us1
+    select
+      distinct cardnum as PAN,
+      avg(tsum) as AVGM,
+      count(1) as CNT,
+      last(ttime)  as TTIME
+      from home.vitaly.datamodel.Transaction(rc=-1).win:time(20 sec)
+        group by cardnum having count(1)>5 and avg(tsum) >1000
+   ;
+
+  @Name('us2')
+  @Description('Правило для пользователя 2')
+  insert into us2
+    select address,merchname, sum(tsum) from  home.vitaly.datamodel.Transaction.win:time(50 sec) group by merchname;
+
+  @Name('us3')
+  @Description('Правило для пользователя 3')
+  insert into us3
+    select address,merchname, sum(tsum) from  home.vitaly.datamodel.Transaction.win:time(50 sec) group by merchname;
+
+  @Name('us4')
+  @Description('Правило для пользователя 4')
+  insert into us4
+    select address,merchname, sum(tsum) from  home.vitaly.datamodel.Transaction.win:time(50 sec) group by merchname;
+
+  @Name('us5')
+   @Description('Правило для пользователя 5')
+   insert into us5 select MyVal from dual;
+
+  @Name('us6')
+   @Description('Правило для пользователя 6')
+   insert into us6 select MyVal from dual;
+
+  @Name('us7')
+   @Description('Правило для пользователя 7')
+   insert into us7 select MyVal from dual;
+
+  @Name('us8')
+   @Description('Правило для пользователя 8')
+   insert into us8 select MyVal from dual;
+
+  @Name('us9')
+   @Description('Правило для пользователя 9')
+   insert into us9 select MyVal from dual;
+
+  @Name('us10')
+   @Description('Правило для пользователя 10')
+   insert into us10 select MyVal from dual;
+
+
+
+

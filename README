@@ -1,14 +1,48 @@
 Esper event processor
 integration with camel and OSGI container
 
+============= что установить ===============
+
+features:install camel-mongodb
+
+deploy доп классы для esper
+deploy esper engine (откорректированный под OSGi )
+
+
+
+activemq изменить порты 5161 5162 51616
+
+
+
+
 
  последовательность запуска:
 
- /work/MongoDB/bin/mongod --dbpath /work/MongoDB/data
+ /H/work/MongoDB_v2.4/bin/mongod --dbpath /H/work/MongoDB_v2.4/data
 
- /work/Java/apache-activemq-5.3.0/bin/activemq
+ export ACTIVEMQ_HOME=/H/Java/apache-activemq-5.7.0; /H/Java/apache-activemq-5.7.0/bin/activemq start
 
+#
+#  Пуск в командной строке
+#
  cd /Users/vitaly/workspace/fraudAnalitic/projects/home.vitaly.eventAnalyzer ; ./runAnalyzer.sh
 
- cd /Users/vitaly/workspace/fraudAnalitic/projects/home.vitaly.simulator ; ./runSimulator.sh
+#
+#  Пуск в OSGi контейнере
+#
+/H/Java/apache-servicemix-4.5.0_full/bin/servicemix
+
+
+ cd /Users/vitaly/workspace/fraudAnalitic/projects/home.vitaly.sim2 ; ./runSimulator.sh
+
+-----------
+service mix web admin:
+
+http://localhost:8181/activemqweb/index.jsp - Active MQ
+http://localhost:8181/system/console        (smx/smx)
+ssh -p 8101 smx@localhost         -  cli console
+
+service:jmx:rmi:///jndi/rmi://localhost:1099/karaf-root   (smx/smx)
+
+
 
