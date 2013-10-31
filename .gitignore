@@ -1,0 +1,10 @@
+.DS_Store
+/.idea
+*.iml
+/build-esper-jar
+/build
+/extlib
+/lib-for-osgi-servicemix_4.4.2
+/lib
+myapp.log
+/out
