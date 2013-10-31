@@ -87,9 +87,9 @@ org.osgi.service.blueprint,
 com.mongodb,
 org.apache.camel.component.mongodb
 "/>
-<!--  -->
-
-
+<!-- ====================
+ create MANIFEST 
+ ======================= -->
             </manifest>
 		</jar>
     </target>
@@ -98,9 +98,9 @@ org.apache.camel.component.mongodb
         <copy file="${build.dir}/${ant.project.name}.jar" todir="${deploy.dir}" />
 
     </target>
-<!--
-
--->
+<!-- ==================== 
+  publish into ivy local repository
+ ========================== -->
      <target name="publish" depends="jar" description="--> publish this project in the ivy repository">
         <property name="revision" value="${version}"/>
         <delete file="${build.dir}/ivy.xml"/>
