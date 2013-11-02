@@ -30,7 +30,7 @@
     </target>
 
     <!-- ================================= 
-          target: report              
+          target: compile              
          ================================= -->
    <target name="compile" depends="resolve" description="--> compile project">
         <mkdir dir="${classes.dir}" />
@@ -47,13 +47,16 @@
         <jar destfile="${build.dir}/${ant.project.name}.jar">
             <fileset dir="${classes.dir}" />
 			<fileset dir="${resources.dir}"/>
+ <!-- ====================
+	 create MANIFEST 
+ ======================= -->
 			<manifest>
-			    <attribute name="Manifest-Version" value="1.0"/>
-			    <attribute name="Built-By" value="VitalySoft(c)"/>
-			    <attribute name="Bundle-Version" value="1.0"/>
-                <attribute name="Bundle-Name" value="Fraud Transaction Analyzer"/>
-                <attribute name="Bundle-SymbolicName" value="FTA"/>
-                <attribute name="Import-Package" value="
+				<attribute name="Manifest-Version" value="1.0"/>
+				<attribute name="Built-By" value="VitalySoft(c)"/>
+				<attribute name="Bundle-Version" value="1.0"/>
+				<attribute name="Bundle-Name" value="Fraud Transaction Analyzer"/>
+				<attribute name="Bundle-SymbolicName" value="FTA"/>
+				<attribute name="Import-Package" value="
 home.vitaly.datamodel,
 com.espertech.esper.client,
 com.espertech.esper.event.map,
@@ -79,9 +82,6 @@ org.osgi.service.blueprint,
 com.mongodb,
 org.apache.camel.component.mongodb
 "/>
-<!-- ====================
- create MANIFEST 
- ======================= -->
             </manifest>
 		</jar>
     </target>
