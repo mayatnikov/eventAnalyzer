@@ -15,13 +15,13 @@ xsi:schemaLocation="
         <property name="esperEngineName" value="esper-engine-1" />
     </bean>
 
-<!--Для работы в Osgi container разблокировать-->
+<!--Для работы в Osgi container разблокировать 
 
     <osgi:service ref="esperBean">
         <osgi:interfaces>
             <value>home.vitaly.transaction.analyzer.EsperBeanInterface</value>
         </osgi:interfaces>
-    </osgi:service>
+    </osgi:service>  -->
 
 <!-- Конец блока для OSGI -->
 
@@ -88,6 +88,19 @@ xsi:schemaLocation="
             <camel:from uri="esper:OutIncreaseAmount?eql=@Name('OutIncreaseAmount') select * from IncreaseAmount" />
             <camel:bean ref="esperProc" method="process"/>
             <camel:to uri="aq:IncreaseAmount"/>
+        </camel:route>
+
+
+        <camel:route id="DumpActiveCard">
+            <camel:from uri="aq:ActiveCard" />
+            <camel:to uri="log:actvecard?level=INFO"/>
+            <!--<camel:bean ref="dummyProc"/>-->
+        </camel:route>
+
+        <camel:route id="DumpIcreaseAmount">
+            <camel:from uri="aq:IncreaseAmount" />
+            <camel:to uri="log:IncreaseAmountTr?level=INFO"/>
+            <!--<camel:bean ref="dummyProc"/>-->
         </camel:route>
 
         <camel:route id="us1">
@@ -158,12 +171,6 @@ xsi:schemaLocation="
             <camel:bean ref="esperProc" method="process"/>
             <!--<camel:to uri="log:us___10?level=INFO"/>-->
             <camel:to uri="aq:us10"/>
-        </camel:route>
-
-        <camel:route id="DumpActiveCard">
-            <camel:from uri="aq:ActiveCard" />
-            <camel:to uri="log:actvecard?level=INFO"/>
-            <!--<camel:bean ref="dummyProc"/>-->
         </camel:route>
 
     </camel:camelContext>
