@@ -39,6 +39,9 @@
    <!-- ================================= 
           target: jar              
          ================================= -->
+    <target name="build" depends="jar" description="--> make a jar file for this project">
+    </target>
+
     <target name="jar" depends="compile" description="--> make a jar file for this project">
         <propertyfile file="${classes.dir}/version.properties">
 	        <entry  key="version" type="int" operation="+" default="0" />

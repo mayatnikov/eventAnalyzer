@@ -22,7 +22,7 @@ import org.apache.log4j.Logger;
  */
 public class CamelDSL extends RouteBuilder {
 
-/* !!!!! не используется так как не активации через application-context см файл application-context.xml*/
+/* !!!!! не используется так как нет активации через application-context см файл application-context.xml*/
 
 
     static Logger LOG = Logger.getLogger(CamelDSL.class.getName());

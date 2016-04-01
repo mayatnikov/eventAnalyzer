@@ -15,13 +15,14 @@ xsi:schemaLocation="
         <property name="esperEngineName" value="esper-engine-1" />
     </bean>
 
-<!--Для работы в Osgi container разблокировать 
+<!--Для работы в Osgi container разблокировать -->
 
     <osgi:service ref="esperBean">
         <osgi:interfaces>
             <value>home.vitaly.transaction.analyzer.EsperBeanInterface</value>
         </osgi:interfaces>
-    </osgi:service>  -->
+    </osgi:service>  
+<!-- end -->
 
 <!-- Конец блока для OSGI -->
 
@@ -46,7 +47,6 @@ xsi:schemaLocation="
         </property>
     </bean>
 
-<!--  -->
     <bean id="mdb" class="com.mongodb.Mongo">
         <constructor-arg index="0">
             <bean class="com.mongodb.MongoURI">
@@ -57,120 +57,33 @@ xsi:schemaLocation="
 
     <bean id="pojo2mongo" class="home.vitaly.camel.processors.Pojo2DBObjectProcessor"/>
 
-
     <camel:camelContext>
+
         <!--    сканирование package на наличие правил на JAVA-DSL
         <camel:package>home.vitaly.camel.routesr</camel:package>  -->
 
         <!-- ввод сообщений в esper  -->
         <camel:route id="getQueue">
             <camel:from uri="aq:TrQueue"/>
-            <camel:to uri="esper:all"/>
-            <camel:to uri="direct:history"/>
-        </camel:route>
-
+            <camel:to uri="esper:myContext1"/>
 <!--Регистрация сообытий в истории  -->
-        <camel:route id="historyReg">
-            <camel:from uri="direct:history"/>
             <camel:bean ref="pojo2mongo" />
             <camel:to uri="mongodb:mdb?database=DBTR&amp;collection=TR_out&amp;operation=insert" />
         </camel:route>
-
 
         <!-- вывод сообщений из event-window по каждому из правил в свою очередь -->
         <camel:route id="ActiveCard">
             <camel:from uri="esper:OutActiveCard?eql=@Name('OutActiveCard') select * from ActiveCard" />
             <camel:bean ref="esperProc" method="process"/>
             <camel:to uri="aq:ActiveCard"/>
+            <camel:to uri="log:actvecard?level=INFO"/>
         </camel:route>
 
         <camel:route id="IncreaseAmount">
             <camel:from uri="esper:OutIncreaseAmount?eql=@Name('OutIncreaseAmount') select * from IncreaseAmount" />
             <camel:bean ref="esperProc" method="process"/>
             <camel:to uri="aq:IncreaseAmount"/>
-        </camel:route>
-
-
-        <camel:route id="DumpActiveCard">
-            <camel:from uri="aq:ActiveCard" />
-            <camel:to uri="log:actvecard?level=INFO"/>
-            <!--<camel:bean ref="dummyProc"/>-->
-        </camel:route>
-
-        <camel:route id="DumpIcreaseAmount">
-            <camel:from uri="aq:IncreaseAmount" />
             <camel:to uri="log:IncreaseAmountTr?level=INFO"/>
-            <!--<camel:bean ref="dummyProc"/>-->
-        </camel:route>
-
-        <camel:route id="us1">
-            <camel:from uri="esper:us1?eql=@Name('us1') select * from us1" />
-            <camel:bean ref="esperProc" method="process"/>
-            <!--<camel:to uri="log:us___1?level=INFO"/>-->
-            <camel:to uri="aq:us1"/>
-        </camel:route>
-
-        <camel:route id="us2">
-            <camel:from uri="esper:us2?eql=@Name('us2') select * from us2" />
-            <camel:bean ref="esperProc" method="process"/>
-            <!--<camel:to uri="log:us___2?level=INFO"/>-->
-            <camel:to uri="aq:us2"/>
-        </camel:route>
-
-        <camel:route id="us3">
-            <camel:from uri="esper:us3?eql=@Name('us3') select * from us3" />
-            <camel:bean ref="esperProc" method="process"/>
-            <!--<camel:to uri="log:us___3?level=INFO"/>-->
-            <camel:to uri="aq:us3"/>
-        </camel:route>
-
-        <camel:route id="us4">
-            <camel:from uri="esper:us4?eql=@Name('us4') select * from us4" />
-            <camel:bean ref="esperProc" method="process"/>
-            <!--<camel:to uri="log:us___4?level=INFO"/>-->
-            <camel:to uri="aq:us4"/>
-        </camel:route>
-
-        <camel:route id="us5">
-            <camel:from uri="esper:us5?eql=@Name('us5') select * from us5" />
-            <camel:bean ref="esperProc" method="process"/>
-            <!--<camel:to uri="log:us___5?level=INFO"/>-->
-            <camel:to uri="aq:us5"/>
-        </camel:route>
-
-        <camel:route id="us6">
-            <camel:from uri="esper:us6?eql=@Name('us6') select * from us6" />
-            <camel:bean ref="esperProc" method="process"/>
-            <!--<camel:to uri="log:us___6?level=INFO"/>-->
-            <camel:to uri="aq:us6"/>
-        </camel:route>
-
-        <camel:route id="us7">
-            <camel:from uri="esper:us7?eql=@Name('us7') select * from us7" />
-            <camel:bean ref="esperProc" method="process"/>
-            <!--<camel:to uri="log:us___7?level=INFO"/>-->
-            <camel:to uri="aq:us7"/>
-        </camel:route>
-
-        <camel:route id="us8">
-            <camel:from uri="esper:us8?eql=@Name('us8') select * from us8" />
-            <camel:bean ref="esperProc" method="process"/>
-            <!--<camel:to uri="log:us___8?level=INFO"/>-->
-            <camel:to uri="aq:us8"/>
-        </camel:route>
-
-        <camel:route id="us9">
-            <camel:from uri="esper:us9?eql=@Name('us9') select * from us9" />
-            <camel:bean ref="esperProc" method="process"/>
-            <!--<camel:to uri="log:us___9?level=INFO"/>-->
-            <camel:to uri="aq:us9"/>
-        </camel:route>
-
-        <camel:route id="us10">
-            <camel:from uri="esper:us10?eql=@Name('us10') select * from us10" />
-            <camel:bean ref="esperProc" method="process"/>
-            <!--<camel:to uri="log:us___10?level=INFO"/>-->
-            <camel:to uri="aq:us10"/>
         </camel:route>
 
     </camel:camelContext>

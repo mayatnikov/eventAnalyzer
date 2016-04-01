@@ -29,11 +29,10 @@ public class Pojo2DBObjectProcessor implements Processor {
 
     @Override
     public void process(Exchange exch) throws Exception {
-        exch.getOut().setBody(obj2map(exch.getIn().getBody()));
+            exch.getOut().setBody(obj2map(exch.getIn().getBody()));
     }
 
-    private static DBObject obj2map(Object o)
-            throws Exception {
+    private static DBObject obj2map(Object o) throws Exception {
         DBObject obj = new BasicDBObject();
         BeanInfo info = Introspector.getBeanInfo(o.getClass());
         for (PropertyDescriptor pd : info.getPropertyDescriptors()) {
